@@ -15,6 +15,7 @@
 #define LLVM_MCA_INSTRBUILDER_H
 
 #include <functional>
+#include <vector>
 
 #include "llvm/ADT/Hashing.h"
 #include "llvm/ADT/STLExtras.h"
@@ -82,7 +83,7 @@ class InstrBuilder {
 
   // These descriptors are customized for particular instructions and cannot
   // be reused
-  SmallVector<std::unique_ptr<const InstrDesc>> CustomDescriptors;
+  std::vector<std::unique_ptr<const InstrDesc>> CustomDescriptors;
 
   bool FirstCallInst;
   bool FirstReturnInst;
