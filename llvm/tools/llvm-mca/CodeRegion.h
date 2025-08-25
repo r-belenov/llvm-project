@@ -123,7 +123,7 @@ public:
   bool empty() const { return Instructions.empty(); }
   bool isLocInRange(llvm::SMLoc Loc) const;
 
-  llvm::ArrayRef<AnnotatedMCInst> getInstructions() const { return Instructions; }
+  llvm::ArrayRef<llvm::MCInst> getInstructions() const { return Instructions; }
 
   llvm::StringRef getDescription() const { return Description; }
 };
