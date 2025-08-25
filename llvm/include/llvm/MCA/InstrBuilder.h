@@ -14,6 +14,8 @@
 #ifndef LLVM_MCA_INSTRBUILDER_H
 #define LLVM_MCA_INSTRBUILDER_H
 
+#include <functional>
+
 #include "llvm/ADT/Hashing.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/MC/MCInstrAnalysis.h"
@@ -78,6 +80,10 @@ class InstrBuilder {
   DenseMap<std::pair<hash_code, unsigned>, std::unique_ptr<const InstrDesc>>
       VariantDescriptors;
 
+  // These descriptors are customized for particular instructions and cannot
+  // be reused
+  SmallVector<std::unique_ptr<const InstrDesc>, 16> CustomDescriptors;
+
   bool FirstCallInst;
   bool FirstReturnInst;
   unsigned CallLatency;
@@ -87,7 +93,9 @@ class InstrBuilder {
 
   Expected<unsigned> getVariantSchedClassID(const MCInst &MCI, unsigned SchedClassID);
   Expected<const InstrDesc &>
-  createInstrDescImpl(const MCInst &MCI, const SmallVector<Instrument *> &IVec);
+  createInstrDescImpl(const MCInst &MCI, const SmallVector<Instrument *> &IVec,
+                      std::function<void(InstrDesc&)> Customizer =
+                      std::function<void(InstrDesc&)>());
   Expected<const InstrDesc &>
   getOrCreateInstrDesc(const MCInst &MCI,
                        const SmallVector<Instrument *> &IVec);
@@ -116,7 +124,9 @@ public:
   void setInstRecycleCallback(InstRecycleCallback CB) { InstRecycleCB = CB; }
 
   LLVM_ABI Expected<std::unique_ptr<Instruction>>
-  createInstruction(const MCInst &MCI, const SmallVector<Instrument *> &IVec);
+  createInstruction(const MCInst &MCI, const SmallVector<Instrument *> &IVec,
+                    std::function<void(InstrDesc&)> Customizer =
+                    std::function<void(InstrDesc&)>());
 };
 } // namespace mca
 } // namespace llvm
