@@ -83,7 +83,7 @@ class InstrBuilder {
 
   // These descriptors are customized for particular instructions and cannot
   // be reused
-  std::vector<std::unique_ptr<const InstrDesc>> CustomDescriptors;
+  SmallVector<std::unique_ptr<const InstrDesc>> CustomDescriptors;
 
   bool FirstCallInst;
   bool FirstReturnInst;
