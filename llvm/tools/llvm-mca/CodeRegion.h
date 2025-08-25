@@ -134,7 +134,7 @@ public:
     if (It != Annotations.end()) {
       return it->second;
     } else {
-      return {};
+      return std::optional<unsigned>();
     }
 };
 
