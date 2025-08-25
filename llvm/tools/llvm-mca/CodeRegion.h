@@ -87,7 +87,7 @@ class CodeRegion {
   // Instructions that form this region.
   llvm::SmallVector<llvm::MCInst, 16> Instructions;
   // Annotations specified in comments, indexed by SMLoc value
-  llvm::DenseMap<char*, InstAnnotation> Annotations;
+  llvm::DenseMap<const char*, InstAnnotation> Annotations;
   // Source location range.
   llvm::SMLoc RangeStart;
   llvm::SMLoc RangeEnd;
