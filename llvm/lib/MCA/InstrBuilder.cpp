@@ -636,7 +636,7 @@ InstrBuilder::createInstrDescImpl(const MCInst &MCI,
 
   if (Customizer) {
     Customizer(*ID);
-    return *CustomDescriptors.emplace_back(std::move(*ID));
+    return *CustomDescriptors.emplace_back(std::move(ID));
   }
   
   bool IsVariadic = MCDesc.isVariadic();
