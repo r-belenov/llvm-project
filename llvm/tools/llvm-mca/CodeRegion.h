@@ -73,6 +73,13 @@
 namespace llvm {
 namespace mca {
 
+class AnnotatedMCInst : public MCInst {
+  llvm::Optional<unsigned> Latency;
+public:
+  AnnotatedMCInst() = default;
+  AnnotatedMCInst(const MCInst& Inst) : MCInst(inst) {}
+};
+
 /// A region of assembly code.
 ///
 /// It identifies a sequence of machine instructions.
@@ -80,7 +87,7 @@ class CodeRegion {
   // An optional descriptor for this region.
   llvm::StringRef Description;
   // Instructions that form this region.
-  llvm::SmallVector<llvm::MCInst, 16> Instructions;
+  llvm::SmallVector<AnnotatedMCInst, 16> Instructions;
   // Source location range.
   llvm::SMLoc RangeStart;
   llvm::SMLoc RangeEnd;
