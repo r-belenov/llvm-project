@@ -73,11 +73,8 @@
 namespace llvm {
 namespace mca {
 
-class AnnotatedMCInst : public MCInst {
+struct InstAnnotation {
   llvm::Optional<unsigned> Latency;
-public:
-  AnnotatedMCInst() = default;
-  AnnotatedMCInst(const MCInst& Inst) : MCInst(inst) {}
 };
 
 /// A region of assembly code.
@@ -87,7 +84,9 @@ class CodeRegion {
   // An optional descriptor for this region.
   llvm::StringRef Description;
   // Instructions that form this region.
-  llvm::SmallVector<AnnotatedMCInst, 16> Instructions;
+  llvm::SmallVector<llvm::MCInst, 16> Instructions;
+  // Annotations specified in comments (the key is index in Instructions)
+  llvm::DenseMap<size_t, InstAnnotation> Annotations;
   // Source location range.
   llvm::SMLoc RangeStart;
   llvm::SMLoc RangeEnd;
