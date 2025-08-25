@@ -69,12 +69,13 @@
 #include "llvm/Support/SMLoc.h"
 #include "llvm/Support/SourceMgr.h"
 #include <vector>
+#include <utility>
 
 namespace llvm {
 namespace mca {
 
 struct InstAnnotation {
-  llvm::Optional<unsigned> Latency;
+  std::optional<unsigned> Latency;
 };
 
 /// A region of assembly code.
