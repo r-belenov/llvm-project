@@ -127,6 +127,15 @@ public:
   llvm::ArrayRef<llvm::MCInst> getInstructions() const { return Instructions; }
 
   llvm::StringRef getDescription() const { return Description; }
+
+  void setExplicitLatency(size_t I, unsigned Lat) { Annotations[I] = Lat; }
+  std::optional<unsigned> getExplicitLatency(size_t I) const {
+    const auto It = Annotations.find(I);
+    if (It != Annotations.end()) {
+      return it->second;
+    } else {
+      return std::optional<unsigned>();
+    }
 };
 
 /// Alias AnalysisRegion with CodeRegion since CodeRegionGenerator
