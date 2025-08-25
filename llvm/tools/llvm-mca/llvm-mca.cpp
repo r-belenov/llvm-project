@@ -620,7 +620,7 @@ int main(int argc, char **argv) {
     IB.clear();
 
     // Lower the MCInst sequence into an mca::Instruction sequence.
-    ArrayRef<MCInst> Insts = Region->getInstructions();
+    ArrayRef<AnnotatedMCInst> Insts = Region->getInstructions();
     mca::CodeEmitter CE(*STI, *MAB, *MCE, Insts);
 
     IPP->resetState();
