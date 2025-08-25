@@ -86,8 +86,8 @@ class CodeRegion {
   llvm::StringRef Description;
   // Instructions that form this region.
   llvm::SmallVector<llvm::MCInst, 16> Instructions;
-  // Annotations specified in comments (the key is index in Instructions)
-  llvm::DenseMap<size_t, InstAnnotation> Annotations;
+  // Annotations specified in comments
+  llvm::DenseMap<llvm::SMLoc, InstAnnotation> Annotations;
   // Source location range.
   llvm::SMLoc RangeStart;
   llvm::SMLoc RangeEnd;
@@ -128,9 +128,9 @@ public:
 
   llvm::StringRef getDescription() const { return Description; }
 
-  void setExplicitLatency(size_t I, unsigned Lat) { Annotations[I].Latency = Lat; }
-  std::optional<unsigned> getExplicitLatency(size_t I) const {
-    const auto It = Annotations.find(I);
+  void setExplicitLatency(llvm::SMLoc Loc, unsigned Lat) { Annotations[Loc].Latency = Lat; }
+  std::optional<unsigned> getExplicitLatency(llvm::SMLoc Loc) const {
+    const auto It = Annotations.find(Loc);
     if (It != Annotations.end()) {
       return It->second.Latency;
     } else {
