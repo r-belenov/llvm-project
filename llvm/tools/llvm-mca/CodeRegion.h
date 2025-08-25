@@ -132,7 +132,7 @@ public:
   std::optional<unsigned> getExplicitLatency(size_t I) const {
     const auto It = Annotations.find(I);
     if (It != Annotations.end()) {
-      return it->second.Latency;
+      return It->second.Latency;
     } else {
       return {};
     }
