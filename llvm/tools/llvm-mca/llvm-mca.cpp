@@ -628,13 +628,20 @@ int main(int argc, char **argv) {
     DenseMap<const MCInst *, SmallVector<mca::Instrument *>> InstToInstruments;
     SmallVector<std::unique_ptr<mca::Instruction>> LoweredSequence;
     SmallPtrSet<const MCInst *, 16> DroppedInsts;
+    size_t Index = 0;
     for (const MCInst &MCI : Insts) {
       SMLoc Loc = MCI.getLoc();
       const SmallVector<mca::Instrument *> Instruments =
           InstrumentRegions.getActiveInstruments(Loc);
 
-      Expected<std::unique_ptr<mca::Instruction>> Inst =
+      auto Latency = Region->getExplicitLatency(Index);      
+      Expected<std::unique_ptr<mca::Instruction>> Inst = Latency ?
+          IB.createInstruction(MCI, Instruments, [=](InstrDesc& ID) {
+            for (auto& W : ID.Writes) W.Latency = *Latency;
+            ID.MaxLatency = *Latency; }) :
           IB.createInstruction(MCI, Instruments);
+      Index++;
+      
       if (!Inst) {
         if (auto NewE = handleErrors(
                 Inst.takeError(),
