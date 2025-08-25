@@ -684,7 +684,7 @@ Expected<std::unique_ptr<Instruction>>
 InstrBuilder::createInstruction(const MCInst &MCI,
                                 const SmallVector<Instrument *> &IVec,
                                 std::function<void(InstrDesc&)> Customizer) {
-  Expected<const InstrDesc &> DescOrErr = Customizer? createInstrDescImpl(MCI, Ivec, Customizer) :
+  Expected<const InstrDesc &> DescOrErr = Customizer? createInstrDescImpl(MCI, IVec, Customizer) :
       getOrCreateInstrDesc(MCI, IVec);
   if (!DescOrErr)
     return DescOrErr.takeError();
