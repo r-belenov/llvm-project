@@ -100,9 +100,9 @@ void AnalysisRegionCommentConsumer::HandleComment(SMLoc Loc,
       Position = Comment.find_first_not_of(" \t");
       if (Position >= Parts.second.size())
         return;
-      Parts.second.drop_front(Position);
+      auto LatStr = Parts.second.drop_front(Position);
       unsigned Latency = 0;
-      if (!Parts.second.getAsInteger(10, Latency))
+      if (!LatStr.getAsInteger(10, Latency))
         Streamer.AddLatencyAnnotation(Latency);
       return;
   }
