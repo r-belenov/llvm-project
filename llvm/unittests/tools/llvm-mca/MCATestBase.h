@@ -71,7 +71,7 @@ protected:
   void SetUp() override;
 
   using Builder = std::function<Expected<std::unique_ptr<mca::Instruction>>
-      (const MCInst&, const SmallVector<mca::Instrument *>&)>;
+      (mca::InstrBuilder&, const MCInst&, const SmallVector<mca::Instrument *>&)>;
 
   /// Utility function to run MCA with (nearly) the same configuration as the
   /// `llvm-mca` tool to verify result correctness.
