@@ -234,3 +234,13 @@ TEST_F(X86TestBase, TestVariantInstructionsSameAddress) {
   Expected<unsigned> Cycles = P->run();
   ASSERT_TRUE(static_cast<bool>(Cycles));
 }
+
+TEST_F(X86TestBase, TestInstructionCustomization) {
+  SmallVector<MCInst> MCIs;
+  getSimpleInsts(MCIs, /*Repeats=*/100);
+
+  // Run the baseline.
+  json::Object BaselineResult;
+  auto E = runBaselineMCA(BaselineResult, MCIs);
+  auto V = ResultObj->getInteger("TotalCycles");
+}
