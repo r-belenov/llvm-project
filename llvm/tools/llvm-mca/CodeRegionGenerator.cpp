@@ -97,7 +97,7 @@ void AnalysisRegionCommentConsumer::HandleComment(SMLoc Loc,
   Comment = Comment.drop_front(Position);
   if (Comment.starts_with("LLVM-MCA-LATENCY")) {
       auto Parts = Comment.split(':');
-      Position = Comment.find_first_not_of(" \t");
+      Position = Parts.second.find_first_not_of(" \t");
       if (Position >= Parts.second.size())
         return;
       auto LatStr = Parts.second.drop_front(Position);
