@@ -247,7 +247,7 @@ TEST_F(X86TestBase, TestInstructionCustomization) {
   // Run the baseline.
   json::Object BaselineResult;
   auto E = runBaselineMCA(BaselineResult, MCIs, {}, nullptr,
-      [=](InstrBuilder& IB, MCInst& MCI, const SmallVector<Instrument*>& Instruments) {
+      [=](InstrBuilder& IB, const MCInst& MCI, const SmallVector<Instrument*>& Instruments) {
         return IB.createInstruction(IB, MCI, Instruments,
           [=](InstrDesc& ID) {
             for (auto& W : ID.Writes) W.Latency = ExplicitLatency;
