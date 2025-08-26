@@ -86,8 +86,6 @@ class CodeRegion {
   llvm::StringRef Description;
   // Instructions that form this region.
   llvm::SmallVector<llvm::MCInst, 16> Instructions;
-  // Annotations specified in comments, indexed by SMLoc value
-  llvm::DenseMap<const char*, InstAnnotation> Annotations;
   // Source location range.
   llvm::SMLoc RangeStart;
   llvm::SMLoc RangeEnd;
@@ -127,16 +125,6 @@ public:
   llvm::ArrayRef<llvm::MCInst> getInstructions() const { return Instructions; }
 
   llvm::StringRef getDescription() const { return Description; }
-
-  void Annotate(llvm::SMLoc Loc, const InstAnnotation& A) { Annotations[Loc.getPointer()] = A; }
-  std::optional<unsigned> getExplicitLatency(llvm::SMLoc Loc) const {
-    const auto It = Annotations.find(Loc.getPointer());
-    if (It != Annotations.end()) {
-      return It->second.Latency;
-    } else {
-      return {};
-    }
-  }
 };
 
 /// Alias AnalysisRegion with CodeRegion since CodeRegionGenerator
@@ -172,6 +160,9 @@ protected:
   llvm::StringMap<unsigned> ActiveRegions;
   bool FoundErrors;
 
+  // Annotations specified in comments, indexed by SMLoc value
+  llvm::DenseMap<const char*, InstAnnotation> Annotations;
+
 public:
   CodeRegions(llvm::SourceMgr &S) : SM(S), FoundErrors(false) {}
   virtual ~CodeRegions() = default;
@@ -186,6 +177,16 @@ public:
 
   void addInstruction(const llvm::MCInst &Instruction);
   llvm::SourceMgr &getSourceMgr() const { return SM; }
+
+  void Annotate(llvm::SMLoc Loc, const InstAnnotation& A) { Annotations[Loc.getPointer()] = A; }
+  std::optional<unsigned> getExplicitLatency(llvm::SMLoc Loc) const {
+    const auto It = Annotations.find(Loc.getPointer());
+    if (It != Annotations.end()) {
+      return It->second.Latency;
+    } else {
+      return {};
+    }
+  }
 
   llvm::ArrayRef<llvm::MCInst> getInstructionSequence(unsigned Idx) const {
     return Regions[Idx]->getInstructions();
