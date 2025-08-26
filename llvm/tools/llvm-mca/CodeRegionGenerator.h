@@ -44,9 +44,10 @@ public:
 /// A comment consumer that parses strings.  The only valid tokens are strings.
 class AnalysisRegionCommentConsumer : public MCACommentConsumer {
   AnalysisRegions &Regions;
+  MCStreamerWrapper &Streamer;
 
 public:
-  AnalysisRegionCommentConsumer(AnalysisRegions &R) : Regions(R) {}
+  AnalysisRegionCommentConsumer(AnalysisRegions &R, MCStreamerWrapper &S) : Regions(R), Streamer(S) {}
 
   /// Parses a comment. It begins a new region if it is of the form
   /// LLVM-MCA-BEGIN. It ends a region if it is of the form LLVM-MCA-END.
@@ -220,15 +221,15 @@ public:
 
 class AsmAnalysisRegionGenerator final : public AnalysisRegionGenerator,
                                          public AsmCodeRegionGenerator {
-  AnalysisRegionCommentConsumer CC;
   MCStreamerWrapper Streamer;
+  AnalysisRegionCommentConsumer CC;
 
 public:
   AsmAnalysisRegionGenerator(const Target &T, llvm::SourceMgr &SM, MCContext &C,
                              const MCAsmInfo &A, const MCSubtargetInfo &S,
                              const MCInstrInfo &I)
       : AnalysisRegionGenerator(SM), AsmCodeRegionGenerator(T, C, A, S, I),
-        CC(Regions), Streamer(Ctx, Regions) {}
+        Streamer(Ctx, Regions), CC(Regions, Streamer) {}
 
   MCACommentConsumer *getCommentConsumer() override { return &CC; };
   CodeRegions &getRegions() override { return Regions; };
