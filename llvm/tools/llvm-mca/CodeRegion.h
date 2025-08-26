@@ -128,7 +128,7 @@ public:
 
   llvm::StringRef getDescription() const { return Description; }
 
-  void setExplicitLatency(llvm::SMLoc Loc, unsigned Lat) { Annotations[Loc.getPointer()].Latency = Lat; }
+  void Annotate(llvm::SMLoc Loc, const InstAnnotation& A) { Annotations[Loc.getPointer()] = A; }
   std::optional<unsigned> getExplicitLatency(llvm::SMLoc Loc) const {
     const auto It = Annotations.find(Loc.getPointer());
     if (It != Annotations.end()) {
