@@ -14,9 +14,6 @@
 #ifndef LLVM_MCA_INSTRBUILDER_H
 #define LLVM_MCA_INSTRBUILDER_H
 
-#include <functional>
-#include <vector>
-
 #include "llvm/ADT/Hashing.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/MC/MCInstrAnalysis.h"
@@ -28,6 +25,7 @@
 #include "llvm/MCA/Support.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/Error.h"
+#include <functional>
 
 namespace llvm {
 namespace mca {
@@ -95,8 +93,7 @@ class InstrBuilder {
   Expected<unsigned> getVariantSchedClassID(const MCInst &MCI, unsigned SchedClassID);
   Expected<const InstrDesc &>
   createInstrDescImpl(const MCInst &MCI, const SmallVector<Instrument *> &IVec,
-                      std::function<void(InstrDesc&)> Customizer =
-                      std::function<void(InstrDesc&)>());
+                      std::function<void(InstrDesc&)> Customizer = {});
   Expected<const InstrDesc &>
   getOrCreateInstrDesc(const MCInst &MCI,
                        const SmallVector<Instrument *> &IVec);
@@ -126,8 +123,7 @@ public:
 
   LLVM_ABI Expected<std::unique_ptr<Instruction>>
   createInstruction(const MCInst &MCI, const SmallVector<Instrument *> &IVec,
-                    std::function<void(InstrDesc&)> Customizer =
-                    std::function<void(InstrDesc&)>());
+                    std::function<void(InstrDesc&)> Customizer = {});
 };
 } // namespace mca
 } // namespace llvm
