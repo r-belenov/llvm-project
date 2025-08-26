@@ -86,6 +86,7 @@ public:
 class MCStreamerWrapper : public MCStreamer {
 protected:
   CodeRegions &Regions;
+  std::optional<InstAnnotation> CurrentAnnotation;
 
 public:
   MCStreamerWrapper(MCContext &Context, mca::CodeRegions &R)
@@ -95,6 +96,7 @@ public:
   void emitInstruction(const MCInst &Inst,
                        const MCSubtargetInfo & /* unused */) override {
     Regions.addInstruction(Inst);
+    CurrentAnnotation = {};
   }
 
   bool emitSymbolAttribute(MCSymbol *Symbol, MCSymbolAttr Attribute) override {
