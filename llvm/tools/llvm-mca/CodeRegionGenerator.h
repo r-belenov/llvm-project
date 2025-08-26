@@ -96,7 +96,15 @@ public:
   void emitInstruction(const MCInst &Inst,
                        const MCSubtargetInfo & /* unused */) override {
     Regions.addInstruction(Inst);
-    CurrentAnnotation = {};
+    if (CurrentAnnotation) {
+      Regions.Annotate(Inst.getLoc(), *CurrentAnnotation);
+      CurrentAnnotation = {};
+    }
+
+    void AddLatencyAnnotation(unsigned Lat) {
+      if (!CurrentAnnotation) CurrentAnnotation = InstAnnotation();
+      CurrentAnnotation->Latency = Lat;
+    }
   }
 
   bool emitSymbolAttribute(MCSymbol *Symbol, MCSymbolAttr Attribute) override {
