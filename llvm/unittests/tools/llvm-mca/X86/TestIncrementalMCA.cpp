@@ -249,7 +249,7 @@ TEST_F(X86TestBase, TestInstructionCustomization) {
   auto E = runBaselineMCA(BaselineResult, MCIs, {}, nullptr,
       [=](InstrBuilder& IB, const MCInst& MCI, const SmallVector<Instrument*>& Instruments)->
         Expected<std::unique_ptr<mca::Instruction>> {
-        return IB.createInstruction(IB, MCI, Instruments,
+        return IB.createInstruction(MCI, Instruments,
           [=](InstrDesc& ID) {
             for (auto& W : ID.Writes) W.Latency = ExplicitLatency;
             ID.MaxLatency = ExplicitLatency;
