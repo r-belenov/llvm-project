@@ -251,7 +251,7 @@ TEST_F(X86TestBase, TestInstructionCustomization) {
         return IB.createInstruction(IB, MCI, Instruments,
           [=](InstrDesc& ID) {
             for (auto& W : ID.Writes) W.Latency = ExplicitLatency;
-            ID.MaxLatency = Explicitlatency
+            ID.MaxLatency = ExplicitLatency;
           });
       });
   auto *BaselineObj = BaselineResult.getObject("SummaryView");
