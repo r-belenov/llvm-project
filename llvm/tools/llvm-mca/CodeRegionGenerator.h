@@ -31,6 +31,50 @@
 namespace llvm {
 namespace mca {
 
+// This class provides the callbacks that occur when parsing input assembly.
+class MCStreamerWrapper : public MCStreamer {
+protected:
+  CodeRegions &Regions;
+  std::optional<InstAnnotation> CurrentAnnotation;
+
+public:
+  MCStreamerWrapper(MCContext &Context, mca::CodeRegions &R)
+      : MCStreamer(Context), Regions(R) {}
+
+  // We only want to intercept the emission of new instructions.
+  void emitInstruction(const MCInst &Inst,
+                       const MCSubtargetInfo & /* unused */) override {
+    Regions.addInstruction(Inst);
+    if (CurrentAnnotation) {
+      Regions.Annotate(Inst.getLoc(), *CurrentAnnotation);
+      CurrentAnnotation = {};
+    }
+  }
+
+  void AddLatencyAnnotation(unsigned Lat) {
+    if (!CurrentAnnotation) CurrentAnnotation = InstAnnotation();
+    CurrentAnnotation->Latency = Lat;
+  }
+
+  bool emitSymbolAttribute(MCSymbol *Symbol, MCSymbolAttr Attribute) override {
+    return true;
+  }
+
+  void emitCommonSymbol(MCSymbol *Symbol, uint64_t Size,
+                        Align ByteAlignment) override {}
+  void emitZerofill(MCSection *Section, MCSymbol *Symbol = nullptr,
+                    uint64_t Size = 0, Align ByteAlignment = Align(1),
+                    SMLoc Loc = SMLoc()) override {}
+  void beginCOFFSymbolDef(const MCSymbol *Symbol) override {}
+  void emitCOFFSymbolStorageClass(int StorageClass) override {}
+  void emitCOFFSymbolType(int Type) override {}
+  void endCOFFSymbolDef() override {}
+
+  ArrayRef<MCInst> GetInstructionSequence(unsigned Index) const {
+    return Regions.getInstructionSequence(Index);
+  }
+};
+
 class MCACommentConsumer : public AsmCommentConsumer {
 protected:
   bool FoundError = false;
@@ -81,50 +125,6 @@ public:
   void HandleComment(SMLoc Loc, StringRef CommentText) override;
 
   InstrumentManager &getInstrumentManager() { return IM; }
-};
-
-// This class provides the callbacks that occur when parsing input assembly.
-class MCStreamerWrapper : public MCStreamer {
-protected:
-  CodeRegions &Regions;
-  std::optional<InstAnnotation> CurrentAnnotation;
-
-public:
-  MCStreamerWrapper(MCContext &Context, mca::CodeRegions &R)
-      : MCStreamer(Context), Regions(R) {}
-
-  // We only want to intercept the emission of new instructions.
-  void emitInstruction(const MCInst &Inst,
-                       const MCSubtargetInfo & /* unused */) override {
-    Regions.addInstruction(Inst);
-    if (CurrentAnnotation) {
-      Regions.Annotate(Inst.getLoc(), *CurrentAnnotation);
-      CurrentAnnotation = {};
-    }
-  }
-
-  void AddLatencyAnnotation(unsigned Lat) {
-    if (!CurrentAnnotation) CurrentAnnotation = InstAnnotation();
-    CurrentAnnotation->Latency = Lat;
-  }
-
-  bool emitSymbolAttribute(MCSymbol *Symbol, MCSymbolAttr Attribute) override {
-    return true;
-  }
-
-  void emitCommonSymbol(MCSymbol *Symbol, uint64_t Size,
-                        Align ByteAlignment) override {}
-  void emitZerofill(MCSection *Section, MCSymbol *Symbol = nullptr,
-                    uint64_t Size = 0, Align ByteAlignment = Align(1),
-                    SMLoc Loc = SMLoc()) override {}
-  void beginCOFFSymbolDef(const MCSymbol *Symbol) override {}
-  void emitCOFFSymbolStorageClass(int StorageClass) override {}
-  void emitCOFFSymbolType(int Type) override {}
-  void endCOFFSymbolDef() override {}
-
-  ArrayRef<MCInst> GetInstructionSequence(unsigned Index) const {
-    return Regions.getInstructionSequence(Index);
-  }
 };
 
 class InstrumentMCStreamer : public MCStreamerWrapper {
