@@ -242,6 +242,6 @@ TEST_F(X86TestBase, TestInstructionCustomization) {
   // Run the baseline.
   json::Object BaselineResult;
   auto E = runBaselineMCA(BaselineResult, MCIs);
-  auto *BaselineObj = BaselineResult.getObject(SV->getNameAsString());
+  auto *BaselineObj = BaselineResult.getObject("SummaryView");
   auto V = BaselineObj->getInteger("TotalCycles");
 }
