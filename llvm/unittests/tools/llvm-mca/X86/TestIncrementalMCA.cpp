@@ -236,6 +236,7 @@ TEST_F(X86TestBase, TestVariantInstructionsSameAddress) {
 }
 
 TEST_F(X86TestBase, TestInstructionCustomization) {
+  const unsigned ExplicitLatency = 100;  
   SmallVector<MCInst> MCIs;
   MCInst InstructionToAdd = MCInstBuilder(X86::XOR64rr)
                                 .addReg(X86::RAX)
@@ -245,7 +246,17 @@ TEST_F(X86TestBase, TestInstructionCustomization) {
 
   // Run the baseline.
   json::Object BaselineResult;
-  auto E = runBaselineMCA(BaselineResult, MCIs);
+  auto E = runBaselineMCA(BaselineResult, MCIs, {}, nullptr,
+      [](InstrBuilder& IB, MCInst& MCI, const SmallVector<Instrument*>& Instruments) {
+        return IB.createInstruction(IB, MCI, Instruments,
+          [=](InstrDesc& ID) {
+            for (auto& W : ID.Writes) W.Latency = ExplicitLatency;
+            ID.MaxLatency = Explicitlatency
+          });
+      });
   auto *BaselineObj = BaselineResult.getObject("SummaryView");
   auto V = BaselineObj->getInteger("TotalCycles");
+  ASSERT_TRUE(V);
+  // Additional 3 cycles for Dispatch, Executed and Retired states
+  ASSERT_EQ(unsigned(*V), ExplicitLatency + 3) << "Total cycles do not match";
 }
