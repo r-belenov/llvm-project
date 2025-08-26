@@ -237,7 +237,11 @@ TEST_F(X86TestBase, TestVariantInstructionsSameAddress) {
 
 TEST_F(X86TestBase, TestInstructionCustomization) {
   SmallVector<MCInst> MCIs;
-  getSimpleInsts(MCIs, /*Repeats=*/100);
+  MCInst InstructionToAdd = MCInstBuilder(X86::XOR64rr)
+                                .addReg(X86::RAX)
+                                .addReg(X86::RAX)
+                                .addReg(X86::RAX);
+  MCIs.push_back(InstructionToAdd);
 
   // Run the baseline.
   json::Object BaselineResult;
