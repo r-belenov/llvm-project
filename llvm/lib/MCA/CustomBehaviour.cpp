@@ -47,7 +47,7 @@ class CustomInstrument : public Instrument {
   std::optional<unsigned> Latency;
 public:
   static const StringRef DESC_NAME;
-  explicit LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
+  explicit CustomInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
     // Skip spaces and tabs.
     unsigned Position = Data.find_first_not_of(" \t");
     if (Position >= Data.size())
@@ -79,7 +79,7 @@ public:
   }
 }
 
-static const StringRef CustomInstrument::DESC_NAME = "CUSTOMIZE";
+const StringRef CustomInstrument::DESC_NAME = "CUSTOMIZE";
 
 bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
   if (EnableDefaults && Type == CustomInstrument::DESC_NAME)
