@@ -106,6 +106,8 @@ void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec, I
 
 UniqueInstrument InstrumentManager::createInstrument(llvm::StringRef Desc,
                                                      llvm::StringRef Data) {
+  if (!EnableDefaults)
+    return std::make_unique<Instrument>(Desc, Data);
   if (Desc == CustomInstrument::DESC_NAME)
     return std::make_unique<CustomInstrument>(Data);
   if (TargetIM && TargetIM->supportsInstrumentType(Desc))
