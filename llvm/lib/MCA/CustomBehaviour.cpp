@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/MCA/CustomBehaviour.h"
+#include "llvm/MCA/Instruction.h"
 
 namespace llvm {
 namespace mca {
@@ -56,7 +57,18 @@ public:
   static const StringRef DESC_NAME = "CUSTOMIZE";
   explicit LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
   }
-  
+
+  bool canCustomize() {
+    return bool(Latency);
+  }
+
+  bool customize(InstrDesc& ID) {
+    if (Latency) {
+      for (auto &W : ID.Writes)
+        W.Latency = *Latency;
+      ID.MaxLatency = *Latency;
+    }
+  }
 }
 
 UniqueInstrument InstrumentManager::createInstrument(llvm::StringRef Desc,
