@@ -59,7 +59,7 @@ public:
       Position = Value.find_first_not_of(" \t");
       if (Position >= Value.size())
         return;
-      auto Stripped = Data.drop_front(Position);
+      auto Stripped = Value.drop_front(Position);
       unsigned L = 0;
       if (!Stripped.getAsInteger(10, L))
         Latency = L;
