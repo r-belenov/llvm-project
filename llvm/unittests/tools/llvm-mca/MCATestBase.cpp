@@ -72,7 +72,7 @@ Error MCATestBase::runBaselineMCA(json::Object &Result, ArrayRef<MCInst> Insts,
   SmallVector<mca::Instrument *> Instruments;
   SmallVector<mca::UniqueInstrument> InstrumentsOwner;
   for (const auto& Desc : Descs) {
-    auto I = IM.createInstrument(Desc.first, Desc.second);
+    auto I = IM->createInstrument(Desc.first, Desc.second);
     Instruments.push_back(I.get());
     InstrumentsOwner.push_back(std::move(I));
   }
