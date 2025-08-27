@@ -50,10 +50,10 @@ bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
   return false;
 }
 
-class LatencyInstrument : public Instrument {
-  unsigned Latency;
+class CustomInstrument : public Instrument {
+  std::optional<unsigned> Latency;
 public:
-  static const StringRef DESC_NAME = "LATENCY";
+  static const StringRef DESC_NAME = "CUSTOMIZE";
   explicit LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
   }
   
@@ -61,8 +61,8 @@ public:
 
 UniqueInstrument InstrumentManager::createInstrument(llvm::StringRef Desc,
                                                      llvm::StringRef Data) {
-  if (Desc == LatencyInstrument::DESC_NAME)
-    return LatencyInstrument(Data);
+  if (Desc == CustomInstrument::DESC_NAME)
+    return CustomInstrument(Data);
   if (TargetIM && TargetIM->supportsInstrumentType(Desc))
     return TargetIM->createInstrument(Desc, Data);
   return std::make_unique<Instrument>(Desc, Data);
