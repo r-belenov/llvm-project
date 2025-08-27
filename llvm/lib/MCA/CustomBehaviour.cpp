@@ -63,7 +63,7 @@ public:
       unsigned L = 0;
       if (!Stripped.getAsInteger(10, L))
         *Latency = L;
-    return;
+    }
   }
 
   bool canCustomize() const {
