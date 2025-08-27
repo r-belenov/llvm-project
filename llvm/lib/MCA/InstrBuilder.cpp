@@ -683,7 +683,7 @@ Expected<std::unique_ptr<Instruction>>
 InstrBuilder::createInstruction(const MCInst &MCI,
                                 const SmallVector<Instrument *> &IVec) {
   Expected<const InstrDesc &> DescOrErr =
-      IM.canCustomize(Ivec) ? createInstrDescImpl(MCI, IVec)
+      IM.canCustomize(IVec) ? createInstrDescImpl(MCI, IVec)
                  : getOrCreateInstrDesc(MCI, IVec);
   if (!DescOrErr)
     return DescOrErr.takeError();
