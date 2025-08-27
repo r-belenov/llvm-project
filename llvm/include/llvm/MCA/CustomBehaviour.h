@@ -182,6 +182,13 @@ public:
   /// it returns the SchedClassID that belongs to MCI.
   virtual unsigned getSchedClassID(const MCInstrInfo &MCII, const MCInst &MCI,
                                    const SmallVector<Instrument *> &IVec) const;
+
+  // Return true if instruments can modify instruction description
+  virtual bool canCustomize(const SmallVector<Instrument *> &IVec) const;
+
+  // Customize instruction description
+  virtual void customize(const SmallVector<Instrument *> &IVec,
+                         llvm::mca::InstrDesc &Desc);
 };
 
 } // namespace mca
