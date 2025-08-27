@@ -130,6 +130,9 @@ public:
 
   virtual ~Instrument() = default;
 
+  virtual bool canCustomize() const { return false; }
+  virtual void customize(InstrDesc &) {}
+
   StringRef getDesc() const { return Desc; }
   StringRef getData() const { return Data; }
 };
