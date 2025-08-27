@@ -89,7 +89,7 @@ bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
   return false;
 }
 
-bool InstrumentManager::canCustomize(const llvm::SmallVector<Instrument *> &IVec) {
+bool InstrumentManager::canCustomize(const llvm::SmallVector<Instrument *> &IVec) const {
   for (const auto I : IVec) {
     if (I->canCustomize())
       return true;
@@ -97,7 +97,7 @@ bool InstrumentManager::canCustomize(const llvm::SmallVector<Instrument *> &IVec
   return false;
 }
 
-void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec, InstrDesc &ID) {
+void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec, InstrDesc &ID) const {
   for (const auto I : IVec) {
     if (I->canCustomize())
       I->customize(ID);
