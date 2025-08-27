@@ -43,18 +43,10 @@ CustomBehaviour::getEndViews(llvm::MCInstPrinter &IP,
   return std::vector<std::unique_ptr<View>>();
 }
 
-bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
-  if (EnableDefaults && Type == LatencyInstrument::DESC_NAME)
-    return true;
-  if (TargetIM)
-    return TargetIM->supportsInstrumentType(Type);
-  return false;
-}
-
 class CustomInstrument : public Instrument {
   std::optional<unsigned> Latency;
 public:
-  static const StringRef DESC_NAME = "CUSTOMIZE";
+  static const StringRef DESC_NAME;
   explicit LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
     // Skip spaces and tabs.
     unsigned Position = Data.find_first_not_of(" \t");
@@ -85,6 +77,16 @@ public:
       ID.MaxLatency = *Latency;
     }
   }
+}
+
+static const StringRef CustomInstrument::DESC_NAME = "CUSTOMIZE";
+
+bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
+  if (EnableDefaults && Type == CustomInstrument::DESC_NAME)
+    return true;
+  if (TargetIM)
+    return TargetIM->supportsInstrumentType(Type);
+  return false;
 }
 
 bool InstrumentManager::canCustomize(const llvm::SmallVector<Instrument *> &IVec) {
