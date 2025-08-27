@@ -76,7 +76,8 @@ protected:
   /// This function only displays on SummaryView by default.
   virtual Error runBaselineMCA(json::Object &Result, ArrayRef<MCInst> Insts,
                                ArrayRef<mca::View *> Views = {},
-                               const mca::PipelineOptions *PO = nullptr);
+                               const mca::PipelineOptions *PO = nullptr,
+                               SmallVector<std::pair<StringRef, StringRef>> Descs = {});
 };
 
 } // end namespace mca
