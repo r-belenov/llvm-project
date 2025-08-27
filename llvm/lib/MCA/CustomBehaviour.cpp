@@ -95,7 +95,7 @@ bool InstrumentManager::canCustomize(const llvm::SmallVector<Instrument *> &IVec
   return false;
 }
 
-void InstrumentManager::customize(InstrDesc& ID, const llvm::SmallVector<Instrument *> &IVec) {
+void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec, InstrDesc &ID) {
   for (const auto I : IVec) {
     if (I->canCustomize())
       I->customize(ID);
