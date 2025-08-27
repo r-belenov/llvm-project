@@ -42,19 +42,44 @@ CustomBehaviour::getEndViews(llvm::MCInstPrinter &IP,
   return std::vector<std::unique_ptr<View>>();
 }
 
+bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
+  if (EnableDefaults && Type == LatencyInstrument::DESC_NAME)
+    return true;
+  if (TargetIM)
+    return TargetIM->supportsInstrumentType(Type);
+  return false;
+}
+
+class LatencyInstrument : public Instrument {
+  unsigned Latency;
+public:
+  static const StringRef DESC_NAME = "LATENCY";
+  explicit LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
+  }
+  
+}
+
 UniqueInstrument InstrumentManager::createInstrument(llvm::StringRef Desc,
                                                      llvm::StringRef Data) {
+  if (Desc == LatencyInstrument::DESC_NAME)
+    return LatencyInstrument(Data);
+  if (TargetIM && TargetIM->supportsInstrumentType(Desc))
+    return TargetIM->createInstrument(Desc, Data);
   return std::make_unique<Instrument>(Desc, Data);
 }
 
 SmallVector<UniqueInstrument>
 InstrumentManager::createInstruments(const MCInst &Inst) {
+  if (TargetIM)
+    return TargetIM->createInstruments(Inst);
   return SmallVector<UniqueInstrument>();
 }
 
 unsigned InstrumentManager::getSchedClassID(
     const MCInstrInfo &MCII, const MCInst &MCI,
     const llvm::SmallVector<Instrument *> &IVec) const {
+  if (TargetIM)
+    return TargetIM->getSchedClassID(MCII, MCI, IVec);
   return MCII.get(MCI.getOpcode()).getSchedClass();
 }
 
