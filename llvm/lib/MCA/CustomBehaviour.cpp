@@ -46,7 +46,7 @@ CustomBehaviour::getEndViews(llvm::MCInstPrinter &IP,
 class CustomInstrument : public Instrument {
   std::optional<unsigned> Latency;
 public:
-  static const StringRef DESC_NAME;
+  static const llvm::StringRef DESC_NAME;
   explicit CustomInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
     // Skip spaces and tabs.
     unsigned Position = Data.find_first_not_of(" \t");
@@ -79,7 +79,7 @@ public:
   }
 }
 
-const StringRef CustomInstrument::DESC_NAME = "CUSTOMIZE";
+const llvm::StringRef CustomInstrument::DESC_NAME = "CUSTOMIZE";
 
 bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
   if (EnableDefaults && Type == CustomInstrument::DESC_NAME)
