@@ -513,7 +513,7 @@ int main(int argc, char **argv) {
   if (!DisableInstrumentManager) {
     std::unique_ptr<mca::InstrumentManager> TargetIM =
       std::unique_ptr<mca::InstrumentManager>(TheTarget->createInstrumentManager(*STI, *MCII));
-    IM = std::make_unique<mca::InstrumentManager>(*STI, *MCII, true, TargetIM);
+    IM = std::move(std::make_unique<mca::InstrumentManager>(*STI, *MCII, true, TargetIM));
   }
   if (!IM) {
     // If -disable-cb flag is set then we use the base class with default behavior
