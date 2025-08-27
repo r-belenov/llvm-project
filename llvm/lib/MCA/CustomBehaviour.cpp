@@ -66,11 +66,11 @@ public:
     }
   }
 
-  bool canCustomize() const {
+  bool canCustomize() const override {
     return bool(Latency);
   }
 
-  void customize(InstrDesc& ID) const {
+  void customize(InstrDesc& ID) const override {
     if (Latency) {
       for (auto &W : ID.Writes)
         W.Latency = *Latency;
@@ -107,7 +107,7 @@ void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec, I
 UniqueInstrument InstrumentManager::createInstrument(llvm::StringRef Desc,
                                                      llvm::StringRef Data) {
   if (Desc == CustomInstrument::DESC_NAME)
-    return CustomInstrument(Data);
+    return std::make_unique<CustomInstrument>(Data);
   if (TargetIM && TargetIM->supportsInstrumentType(Desc))
     return TargetIM->createInstrument(Desc, Data);
   return std::make_unique<Instrument>(Desc, Data);
