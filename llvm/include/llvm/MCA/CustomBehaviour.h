@@ -143,19 +143,25 @@ class LLVM_ABI InstrumentManager {
 protected:
   const MCSubtargetInfo &STI;
   const MCInstrInfo &MCII;
+  bool EnableDefaults;
+  std::unique_ptr<InstrumentManager> TargetIM;
 
 public:
-  InstrumentManager(const MCSubtargetInfo &STI, const MCInstrInfo &MCII)
-      : STI(STI), MCII(MCII) {}
+  InstrumentManager(const MCSubtargetInfo &STI, const MCInstrInfo &MCII,
+                    bool EnableDefaults = false,
+                    std::unique_ptr<InstrumentManager> TargetIM = {})
+      : STI(STI), MCII(MCII), EnableDefaults(EnableDefaults),
+        TargetIM(std::move(TargetIM)) {}
 
   virtual ~InstrumentManager() = default;
 
   /// Returns true if llvm-mca should ignore instruments.
-  virtual bool shouldIgnoreInstruments() const { return true; }
+  virtual bool shouldIgnoreInstruments() const {
+    return !EnableDefaults && (!TargetIM || TargetIM->shouldIgnoreInstruments()); }
 
   // Returns true if this supports processing Instrument with
   // Instrument.Desc equal to Type
-  virtual bool supportsInstrumentType(StringRef Type) const { return false; }
+  virtual bool supportsInstrumentType(StringRef Type) const;
 
   /// Allocate an Instrument, and return a unique pointer to it. This function
   /// may be useful to create instruments coming from comments in the assembly.
