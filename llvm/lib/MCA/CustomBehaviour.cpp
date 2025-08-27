@@ -77,7 +77,7 @@ public:
       ID.MaxLatency = *Latency;
     }
   }
-}
+};
 
 const llvm::StringRef CustomInstrument::DESC_NAME = "CUSTOMIZE";
 
