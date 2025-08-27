@@ -56,18 +56,49 @@ class CustomInstrument : public Instrument {
 public:
   static const StringRef DESC_NAME = "CUSTOMIZE";
   explicit LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
+    // Skip spaces and tabs.
+    unsigned Position = Data.find_first_not_of(" \t");
+    if (Position >= Data.size())
+      // We reached the end of the comment. Bail out.
+      return;
+    Data = Data.drop_front(Position);
+    auto [Name, Value] = Data.split(':');
+    if (Name.upper() == "LATENCY") {
+      Position = Value.find_first_not_of(" \t");
+      if (Position >= Value.size())
+        return;
+      auto Stripped = Data.drop_front(Position);
+      unsigned L = 0;
+      if (!Stripped.getAsInteger(10, L))
+        *Latency = L;
+    return;
   }
 
-  bool canCustomize() {
+  bool canCustomize() const {
     return bool(Latency);
   }
 
-  bool customize(InstrDesc& ID) {
+  void customize(InstrDesc& ID) const {
     if (Latency) {
       for (auto &W : ID.Writes)
         W.Latency = *Latency;
       ID.MaxLatency = *Latency;
     }
+  }
+}
+
+bool InstrumentManager::canCustomize(const llvm::SmallVector<Instrument *> &IVec) {
+  for (const auto I : IVec) {
+    if (I->canCustomize())
+      return true;
+  }
+  return false;
+}
+
+void InstrumentManager::customize(InstrDesc& ID, const llvm::SmallVector<Instrument *> &IVec) {
+  for (const auto I : IVec) {
+    if (I->canCustomize())
+      I->customize(ID);
   }
 }
 
