@@ -246,16 +246,7 @@ TEST_F(X86TestBase, TestInstructionCustomization) {
 
   // Run the baseline.
   json::Object BaselineResult;
-  auto E = runBaselineMCA(BaselineResult, MCIs, {}, nullptr,
-                          [=](InstrBuilder &IB, const MCInst &MCI,
-                              const SmallVector<Instrument *> &Instruments) {
-                            return IB.createInstruction(
-                                MCI, Instruments, [=](InstrDesc &ID) {
-                                  for (auto &W : ID.Writes)
-                                    W.Latency = ExplicitLatency;
-                                  ID.MaxLatency = ExplicitLatency;
-                                });
-                          });
+  auto E = runBaselineMCA(BaselineResult, MCIs, {}, nullptr);
   ASSERT_FALSE(bool(E)) << "Failed to run baseline";
   auto *BaselineObj = BaselineResult.getObject("SummaryView");
   auto V = BaselineObj->getInteger("TotalCycles");
