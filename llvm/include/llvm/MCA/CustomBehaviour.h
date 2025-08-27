@@ -157,7 +157,8 @@ public:
 
   /// Returns true if llvm-mca should ignore instruments.
   virtual bool shouldIgnoreInstruments() const {
-    return !EnableDefaults && (!TargetIM || TargetIM->shouldIgnoreInstruments()); }
+    return !EnableDefaults &&
+           (!TargetIM || TargetIM->shouldIgnoreInstruments()); }
 
   // Returns true if this supports processing Instrument with
   // Instrument.Desc equal to Type
