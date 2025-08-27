@@ -191,7 +191,7 @@ public:
 
   // Customize instruction description
   virtual void customize(const SmallVector<Instrument *> &IVec,
-                         llvm::mca::InstrDesc &Desc);
+                         llvm::mca::InstrDesc &Desc) const;
 };
 
 } // namespace mca
