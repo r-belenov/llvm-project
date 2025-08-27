@@ -62,7 +62,7 @@ public:
       auto Stripped = Data.drop_front(Position);
       unsigned L = 0;
       if (!Stripped.getAsInteger(10, L))
-        *Latency = L;
+        Latency = L;
     }
   }
 
