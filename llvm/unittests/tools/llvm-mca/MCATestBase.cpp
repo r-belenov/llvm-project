@@ -61,18 +61,20 @@ void MCATestBase::SetUp() {
 
 Error MCATestBase::runBaselineMCA(json::Object &Result, ArrayRef<MCInst> Insts,
                                   ArrayRef<mca::View *> Views,
-                                  const mca::PipelineOptions *PO, Builder B) {
+                                  const mca::PipelineOptions *PO,
+                                  std::unique_ptr<mca::InstrumentManager> IM = {}) {
   mca::Context MCA(*MRI, *STI);
 
-  // Default InstrumentManager
-  auto IM = std::make_unique<mca::InstrumentManager>(*STI, *MCII);
+  // Create default InstrumentManager if needed
+  if (!IM)
+    IM = std::make_unique<mca::InstrumentManager>(*STI, *MCII);
   mca::InstrBuilder IB(*STI, *MCII, *MRI, MCIA.get(), *IM, /*CallLatency=*/100);
 
   const SmallVector<mca::Instrument *> Instruments;
   SmallVector<std::unique_ptr<mca::Instruction>> LoweredInsts;
   for (const auto &MCI : Insts) {
     Expected<std::unique_ptr<mca::Instruction>> Inst =
-        B ? B(IB, MCI, Instruments) : IB.createInstruction(MCI, Instruments);
+        IB.createInstruction(MCI, Instruments);
     if (!Inst) {
       if (auto NewE =
               handleErrors(Inst.takeError(),
