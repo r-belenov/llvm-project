@@ -50,7 +50,8 @@ InstrumentManager::InstrumentManager(const MCSubtargetInfo &STI, const MCInstrIn
                                      bool EnableDefaults,const Target* TheTarget)
     : STI(STI), MCII(MCII), EnableDefaults(EnableDefaults) {
     if (TheTarget)
-      TargetIM = TheTarget->createInstrumentManager(STI, MCII);
+      TargetIM = std::unique_ptr<InstrumentManager>(
+          TheTarget->createInstrumentManager(STI, MCII));
 }
 
 bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
