@@ -177,9 +177,11 @@ protected:
 public:
   InstrumentManager(const MCSubtargetInfo &STI, const MCInstrInfo &MCII,
                     bool EnableDefaults = false,
-                    std::unique_ptr<InstrumentManager> TargetIM = {})
-      : STI(STI), MCII(MCII), EnableDefaults(EnableDefaults),
-        TargetIM(std::move(TargetIM)) {}
+                    const Target* TheTarget = nullptr)
+      : STI(STI), MCII(MCII), EnableDefaults(EnableDefaults) {
+    if (TheTarget)
+      TargetIM = TheTarget->createInstrumentManager(STI, MCII);
+  }
 
   virtual ~InstrumentManager() = default;
 
