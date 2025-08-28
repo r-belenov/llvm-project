@@ -150,7 +150,7 @@ public:
   virtual ~Instrument() = default;
 
   virtual bool canCustomize() const { return bool(Latency); }
-  virtual void customize(InstrDesc &) const {
+  virtual void customize(InstrDesc &ID) const {
     if (Latency) {
       for (auto &W : ID.Writes)
         W.Latency = *Latency;
