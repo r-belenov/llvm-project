@@ -163,6 +163,7 @@ public:
 };
 
 using UniqueInstrument = std::unique_ptr<Instrument>;
+class Target;
 
 /// This class allows targets to optionally customize the logic that resolves
 /// scheduling class IDs. Targets can use information encoded in Instrument
@@ -177,11 +178,7 @@ protected:
 public:
   InstrumentManager(const MCSubtargetInfo &STI, const MCInstrInfo &MCII,
                     bool EnableDefaults = false,
-                    const Target* TheTarget = nullptr)
-      : STI(STI), MCII(MCII), EnableDefaults(EnableDefaults) {
-    if (TheTarget)
-      TargetIM = TheTarget->createInstrumentManager(STI, MCII);
-  }
+                    const Target* TheTarget = nullptr);
 
   virtual ~InstrumentManager() = default;
 
