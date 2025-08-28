@@ -27,6 +27,9 @@
 #include "llvm/Support/Compiler.h"
 
 namespace llvm {
+
+class Target;
+
 namespace mca {
 
 /// Class which can be overriden by targets to modify the
@@ -163,7 +166,6 @@ public:
 };
 
 using UniqueInstrument = std::unique_ptr<Instrument>;
-class Target;
 
 /// This class allows targets to optionally customize the logic that resolves
 /// scheduling class IDs. Targets can use information encoded in Instrument
