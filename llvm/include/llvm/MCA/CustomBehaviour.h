@@ -176,7 +176,7 @@ protected:
 public:
   InstrumentManager(const MCSubtargetInfo &STI, const MCInstrInfo &MCII,
                     bool EnableInstruments = false) :
-      STI(STI), MCII(MCII), EnableDefaults(EnableDefaults) {};
+      STI(STI), MCII(MCII), EnableInstruments(EnableInstruments) {};
 
   virtual ~InstrumentManager() = default;
 
