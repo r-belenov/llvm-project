@@ -47,7 +47,7 @@ CustomBehaviour::getEndViews(llvm::MCInstPrinter &IP,
 static const llvm::StringRef CustomInstrumentName = "CUSTOMIZE";
 
 bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
-  return EnableDefaults && Type == CustomInstrumentName);
+  return EnableInstruments && Type == CustomInstrumentName);
 }
 
 bool InstrumentManager::canCustomize(
