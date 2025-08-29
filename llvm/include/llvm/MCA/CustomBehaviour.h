@@ -27,9 +27,6 @@
 #include "llvm/Support/Compiler.h"
 
 namespace llvm {
-
-class Target;
-
 namespace mca {
 
 /// Class which can be overriden by targets to modify the
