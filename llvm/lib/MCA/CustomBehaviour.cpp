@@ -68,7 +68,7 @@ void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec,
 
 UniqueInstrument InstrumentManager::createInstrument(llvm::StringRef Desc,
                                                      llvm::StringRef Data) {
-  if (!EnableDefaults)
+  if (!EnableInstruments)
     return std::make_unique<Instrument>(Desc, Data);
   if (Desc == LatencyInstrument::DESC_NAME)
     return std::make_unique<LatencyInstrument>(Data);
