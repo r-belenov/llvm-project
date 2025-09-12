@@ -43,7 +43,7 @@ CustomBehaviour::getEndViews(llvm::MCInstPrinter &IP,
   return std::vector<std::unique_ptr<View>>();
 }
 
-static const llvm::StringRef LatencyInstrumentName = "LATENCY";
+const llvm::StringRef LatencyInstrument::DESC_NAME = "LATENCY";
 
 bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
   return EnableInstruments && Type == LatencyInstrumentName;
