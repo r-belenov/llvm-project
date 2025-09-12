@@ -151,7 +151,6 @@ public:
     unsigned L = 0;
     if (!Data.getAsInteger(10, L))
       Latency = L;
-    }
   }
 
   bool canCustomize() const override { return bool(Latency); }
