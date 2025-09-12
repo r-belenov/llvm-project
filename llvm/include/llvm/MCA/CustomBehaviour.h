@@ -141,7 +141,7 @@ class LatencyInstrument : public Instrument {
   std::optional<unsigned> Latency;
 public:
   static const llvm::StringRef DESC_NAME;
-  LatencyInstrument(StringRef Desc, StringRef Data) : Instrument(DESC_NAME, Data) {
+  LatencyInstrument(StringRef Data) : Instrument(DESC_NAME, Data) {
     // Skip spaces and tabs.
     unsigned Position = Data.find_first_not_of(" \t");
     if (Position >= Data.size())
