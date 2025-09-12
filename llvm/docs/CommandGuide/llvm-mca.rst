@@ -385,15 +385,17 @@ if its location is in range [R.RangeStart, R.RangeEnd].
 
 There is one instrument that can be used on all targets to explicitly
 set instruction latencies. It can be used, for example, to model the
-cache misses that impact load latencies. The syntax is
+cache misses that impact load latencies. The syntax is like
 
 .. code-block:: none
-  # LLVM-MCA-LATENCY <value>
-  ...
+
+  # LLVM-MCA-LATENCY 100
+  mov (%edi), %eax
   # LLVM-MCA-LATENCY
 
-LLVM-MCA-LATENCY without argument sends the region with explicit
-latency, after it default target latencies are used.
+It set the latency of mov instruction to 100. LLVM-MCA-LATENCY without
+argument ends the region with explicit latency, after it default target
+latencies are used.
 
 On RISCV targets, vector instructions have different behaviour depending
 on the LMUL. Code can be instrumented with a comment that takes the
