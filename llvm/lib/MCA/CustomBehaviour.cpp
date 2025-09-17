@@ -54,7 +54,7 @@ bool InstrumentManager::canCustomize(
   for (const auto I : IVec) {
     if (I->getDesc() == LatencyInstrument::DESC_NAME) {
       auto LatInst = static_cast<LatencyInstrument*>(I);
-      return I->hasValue();
+      return LatInst->hasValue();
     }
   }
   return false;
