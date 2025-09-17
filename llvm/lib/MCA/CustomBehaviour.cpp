@@ -69,8 +69,8 @@ void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec,
         auto Latency = LatInst->getLatency();
         // TODO Allow to customize a subset of ID.Writes
         for (auto &W : ID.Writes)
-          W.Latency = *Latency;
-        ID.MaxLatency = *Latency;
+          W.Latency = Latency;
+        ID.MaxLatency = Latency;
       }
     }
   }
