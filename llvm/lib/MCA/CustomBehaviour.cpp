@@ -52,8 +52,9 @@ bool InstrumentManager::supportsInstrumentType(StringRef Type) const {
 bool InstrumentManager::canCustomize(
     const llvm::SmallVector<Instrument *> &IVec) const {
   for (const auto I : IVec) {
-    if (I->canCustomize())
-      return true;
+    if (I->getDesc() == LatencyInstrument::DESC_NAME) {
+      auto LatInst = static_cast<LatencyInstrument*> I;
+      return I->hasValue();
   }
   return false;
 }
@@ -61,8 +62,16 @@ bool InstrumentManager::canCustomize(
 void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec,
                                   InstrDesc &ID) const {
   for (const auto I : IVec) {
-    if (I->canCustomize())
-      I->customize(ID);
+    if (I->getDesc() == LatencyInstrument::DESC_NAME) {
+      auto LatInst = static_cast<LatencyInstrument*> I;
+      if (LatInst->hasValue()) {
+        Lat = LatInst->getLatency();
+        // TODO Allow to customize a subset of ID.Writes
+        for (auto &W : ID.Writes)
+          W.Latency = *Latency;
+        ID.MaxLatency = *Latency;
+      }
+    }
   }
 }
 
