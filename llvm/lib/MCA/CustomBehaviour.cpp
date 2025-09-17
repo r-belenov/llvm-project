@@ -66,7 +66,7 @@ void InstrumentManager::customize(const llvm::SmallVector<Instrument *> &IVec,
     if (I->getDesc() == LatencyInstrument::DESC_NAME) {
       auto LatInst = static_cast<LatencyInstrument*> I;
       if (LatInst->hasValue()) {
-        Lat = LatInst->getLatency();
+        auto Latency = LatInst->getLatency();
         // TODO Allow to customize a subset of ID.Writes
         for (auto &W : ID.Writes)
           W.Latency = *Latency;
