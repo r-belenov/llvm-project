@@ -55,6 +55,7 @@ bool InstrumentManager::canCustomize(
     if (I->getDesc() == LatencyInstrument::DESC_NAME) {
       auto LatInst = static_cast<LatencyInstrument*> I;
       return I->hasValue();
+    }
   }
   return false;
 }
