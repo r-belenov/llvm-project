@@ -151,7 +151,7 @@ public:
       Latency = L;
   }
 
-  bool hasValue() const override { return bool(Latency); }
+  bool hasValue() const { return bool(Latency); }
   unsigned getLatency() { return *Latency; }
 };
 
