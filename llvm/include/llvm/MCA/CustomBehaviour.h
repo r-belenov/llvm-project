@@ -195,7 +195,7 @@ public:
   /// the correct scheduling information without additional data. By default,
   /// it returns the SchedClassID that belongs to MCI.
   virtual unsigned getSchedClassID(const MCInstrInfo &MCII, const MCInst &MCI,
-                                   const ArrayRef<Instrument *> IVec) const;
+                                   const SmallVector<Instrument *> &IVec) const;
 
   // Return true if instruments can modify instruction description
   virtual bool canCustomize(const ArrayRef<Instrument *> IVec) const;
