@@ -79,6 +79,10 @@ public:
   /// one and begin a new one using the new data.
   void HandleComment(SMLoc Loc, StringRef CommentText) override;
 
+  // Inline comments apply instruments only to the line of code they
+  // are located. Several instrument descriptions separated by ';' are allowed.
+  void HandleInlineComment(SMLoc CodeLoc, SMLoc ComLoc, StringRef CommentText) override;
+
   InstrumentManager &getInstrumentManager() { return IM; }
 };
 
