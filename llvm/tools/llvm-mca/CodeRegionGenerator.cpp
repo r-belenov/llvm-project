@@ -183,8 +183,10 @@ void InstrumentRegionCommentConsumer::HandleInlineComment(
   SmallVector<StringRef> InstDescs;
   CommentText.split(InstDescs, ';');
   for (auto InstDesc : InstDescs) {
+    InsDesc = InstDesc.trim();
     auto [InstrumentKind, Data] = InstDesc.split(' ');
     InstrumentKind = InstrumentKind.trim();
+    if (!InstrumentKind.consume_front("LLVM-MCA-")) continue;
     Data = Data.trim();
     if (IM.supportsInstrumentType(InstrumentKind)) {
       auto I = IM.createInstrument(InstrumentKind, Data);
