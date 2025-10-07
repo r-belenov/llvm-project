@@ -40,7 +40,7 @@ public:
   virtual void HandleComment(SMLoc Loc, StringRef CommentText) = 0;
 
   /// Explicit callback for line comments that can be useful for annotations
-  /// that apply to single statement. Default implemeentation just passes the data
+  /// that apply to single statement. Default implementation just passes the data
   // to HandleComment()
   virtual void HandleLineComment(SMLoc LineLoc, SMLoc ComLoc, StringRef CommentText) {
     HandleComment(ComLoc, CommentText);
