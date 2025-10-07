@@ -319,7 +319,7 @@ AsmToken AsmLexer::LexLineComment() {
           SMLoc::getFromPointer(CommentTextStart),
           StringRef(CommentTextStart, NewlinePtr - 1 - CommentTextStart));
     } else {
-      CommentConsumer->HandleLineComment(
+      CommentConsumer->HandleInlineComment(
           SMLoc::getFromPointer(LineStart),
           SMLoc::getFromPointer(CommentTextStart),
           StringRef(CommentTextStart, NewlinePtr - 1 - CommentTextStart));
