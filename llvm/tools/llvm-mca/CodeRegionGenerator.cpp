@@ -178,5 +178,10 @@ void InstrumentRegionCommentConsumer::HandleComment(SMLoc Loc,
   Regions.beginRegion(InstrumentKind, Loc, std::move(I));
 }
 
+void InstrumentRegionCommentConsumer::HandleInlineComment(
+    SMLoc CodeLoc, SMLoc ComLoc, StringRef CommentText) {
+    
+} 
+
 } // namespace mca
 } // namespace llvm
