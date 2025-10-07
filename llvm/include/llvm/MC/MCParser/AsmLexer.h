@@ -66,6 +66,7 @@ class AsmLexer {
   bool EndStatementAtEOF = true;
 
   const char *TokStart = nullptr;
+  const char *LineStart = nullptr;
   bool SkipSpace = true;
   bool AllowAtInIdentifier = false;
   bool AllowHashInIdentifier = false;
