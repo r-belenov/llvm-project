@@ -180,7 +180,21 @@ void InstrumentRegionCommentConsumer::HandleComment(SMLoc Loc,
 
 void InstrumentRegionCommentConsumer::HandleInlineComment(
     SMLoc CodeLoc, SMLoc ComLoc, StringRef CommentText) {
-    
+  SmallVector<StringRef> InstDescs;
+  CommentText.split(InstDescs, ';');
+  for (auto InstDesc : InstDescs) {
+    [InstrumentKind, Data] = InstDesc.split(' ');
+    InstrumentKind = InstrumentKind.trim();
+    Data = Data.trim();
+    if (IM.supportsInstrumentType(InstrumentKind)) {
+      auto I = IM.createInstrument(InstrumentKind, Data);
+      if (!I) continue;
+      if (Regions.isRegionActive(InstrumentKind))
+        Regions.endRegion(InstrumentKind, CodeLoc);
+      Regions.beginRegion(InstrumentKind, CodeLoc, std::move(I));
+      Regions.endRegions(InstrumentKind, ComLoc);
+    }
+  }
 } 
 
 } // namespace mca
