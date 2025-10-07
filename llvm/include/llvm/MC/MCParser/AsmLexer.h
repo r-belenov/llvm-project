@@ -38,6 +38,13 @@ public:
   /// of the comment, excluding the comment start and end markers, and the
   /// newline for single-line comments.
   virtual void HandleComment(SMLoc Loc, StringRef CommentText) = 0;
+
+  /// Explicit callback for line comments that can be useful for annotations
+  /// that apply to single statement. Default implemeentation just passes the data
+  // to HandleComment()
+  virtual void HandleLineComment(SMLoc LineLoc, SMLoc ComLoc, StringRef CommentText) {
+    HandleComment(ComLoc, CommentText);
+  }
 };
 
 class AsmLexer {
