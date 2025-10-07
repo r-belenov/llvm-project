@@ -123,9 +123,9 @@ void AsmLexer::setBuffer(StringRef Buf, const char *ptr,
   CurBuf = Buf;
 
   if (ptr)
-    CurPtr = ptr;
+    LineStart = CurPtr = ptr;
   else
-    CurPtr = CurBuf.begin();
+    LineStart = CurPtr = CurBuf.begin();
 
   TokStart = nullptr;
   this->EndStatementAtEOF = EndStatementAtEOF;
@@ -314,9 +314,16 @@ AsmToken AsmLexer::LexLineComment() {
 
   // If we have a CommentConsumer, notify it about the comment.
   if (CommentConsumer) {
-    CommentConsumer->HandleComment(
-        SMLoc::getFromPointer(CommentTextStart),
-        StringRef(CommentTextStart, NewlinePtr - 1 - CommentTextStart));
+    if (IsAtStartOfStatement) {
+      CommentConsumer->HandleComment(
+          SMLoc::getFromPointer(CommentTextStart),
+          StringRef(CommentTextStart, NewlinePtr - 1 - CommentTextStart));
+    } else {
+      CommentConsumer->HandleLineComment(
+          SMLoc::getFromPointer(LineStart),
+          SMLoc::getFromPointer(CommentTextStart),
+          StringRef(CommentTextStart, NewlinePtr - 1 - CommentTextStart));
+    }
   }
 
   IsAtStartOfLine = true;
@@ -811,6 +818,7 @@ bool AsmLexer::isAtStatementSeparator(const char *Ptr) {
 
 AsmToken AsmLexer::LexToken() {
   TokStart = CurPtr;
+  if (JustConsumedEOL) LineStart = CurPtr;
   // This always consumes at least one character.
   int CurChar = getNextChar();
 
