@@ -38,6 +38,11 @@ public:
   /// of the comment, excluding the comment start and end markers, and the
   /// newline for single-line comments.
   virtual void HandleComment(SMLoc Loc, StringRef CommentText) = 0;
+
+  /// Explicit callback for line comments after statements
+  virtual void HandleInlineComment(SMLoc StatementLoc, SMLoc ComLoc, StringRef CommentText) {
+    HandleComment(ComLoc, CommentText);
+  }
 };
 
 class AsmLexer {
@@ -59,6 +64,7 @@ class AsmLexer {
   bool EndStatementAtEOF = true;
 
   const char *TokStart = nullptr;
+  const char *LineStart = nullptr;
   bool SkipSpace = true;
   bool AllowAtInIdentifier = false;
   bool AllowHashInIdentifier = false;

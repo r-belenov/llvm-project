@@ -178,5 +178,26 @@ void InstrumentRegionCommentConsumer::HandleComment(SMLoc Loc,
   Regions.beginRegion(InstrumentKind, Loc, std::move(I));
 }
 
+void InstrumentRegionCommentConsumer::HandleInlineComment(
+    SMLoc CodeLoc, SMLoc ComLoc, StringRef CommentText) {
+  SmallVector<StringRef> InstDescs;
+  CommentText.split(InstDescs, ';');
+  for (auto InstDesc : InstDescs) {
+    InstDesc = InstDesc.trim();
+    auto [InstrumentKind, Data] = InstDesc.split(' ');
+    InstrumentKind = InstrumentKind.trim();
+    if (!InstrumentKind.consume_front("LLVM-MCA-")) continue;
+    Data = Data.trim();
+    if (IM.supportsInstrumentType(InstrumentKind)) {
+      auto I = IM.createInstrument(InstrumentKind, Data);
+      if (!I) continue;
+      if (Regions.isRegionActive(InstrumentKind))
+        Regions.endRegion(InstrumentKind, CodeLoc);
+      Regions.beginRegion(InstrumentKind, CodeLoc, std::move(I));
+      Regions.endRegion(InstrumentKind, ComLoc);
+    }
+  }
+} 
+
 } // namespace mca
 } // namespace llvm
